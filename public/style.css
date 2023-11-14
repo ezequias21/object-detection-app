@@ -1,0 +1,49 @@
+
+.card {
+   margin: 50px 20px;
+    width: 400px;
+}
+
+.card__container {
+    display: flex;
+    justify-content: center;
+
+}
+
+.form-cod-room__container {
+    display: flex;
+    margin: 50px 20px;
+}
+
+.btn-action__container {
+    display: flex;
+    justify-content: center;
+}
+.frame__container{
+
+    display: grid;
+    place-items: center;
+}
+.card-frame{
+    margin-top: 0;
+    width: 800px;
+}
+.card-image__frame {
+    width: 800px;
+}
+.card__btn-action {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+.row {
+    margin-bottom: 0;
+}
+
+.h4 {
+    margin: 40px 0;
+    text-align: center;
+}
+/* .card-image__container {
+    width: 640px;
+} */
