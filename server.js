@@ -1,4 +1,5 @@
 const express = require('express')
+const bodyParser = require('body-parser')
 const app = express()
 const EventEmitter = require('events');
 const server = require('http').Server(app)
@@ -18,13 +19,42 @@ const { v4: uuidV4 } = require('uuid')
 
 app.set('view engine', 'ejs')
 app.use(express.static('public'))
+app.use(bodyParser.urlencoded({extended: true}))
+
+// app.get('/', (req, res) => {
+// 	res.redirect(`room/${uuidV4()}`)
+// })
+
+// app.get('room/:room', (req, res) => {
+// 	res.render('room', { roomId: req.params.room })
+// })
 
 app.get('/', (req, res) => {
-	res.redirect(`/${uuidV4()}`)
+	res.render('home')
 })
 
-app.get('/:room', (req, res) => {
-	res.render('room', { roomId: req.params.room })
+app.get('/login', (req, res) => {
+	res.render('login')
+})
+
+app.post('/login', (req, res) => {
+	console.log(req.body.password)
+	res.render('login')
+})
+
+app.get('/enter-room', (req, res) => {
+	console.log(req.body.password)
+	res.render('enter-room')
+})
+
+app.get('/create-room', (req, res) => {
+	console.log(req.body.password)
+	res.render('create-room')
+})
+
+
+app.get('/room', (req, res) => {
+	res.render('room')
 })
 
 var sendProcessFrame = true;
