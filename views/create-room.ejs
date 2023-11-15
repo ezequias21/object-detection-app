@@ -6,15 +6,17 @@
             <div class="card-stacked">
                 <div class="card-content">
                       <p>Crie uma nova sala.</p>
-                      <div class="row">
-                        <div class="input-field col s6">
-                            <input id="last_name" type="text" class="validate">
-                            <label for="last_name">Código da sala</label>
-                        </div>
-                        <div class="input-field col s6 btn-action__container">
-                            <a class="waves-effect waves-light blue btn">Criar</a>
-                        </div>
-                    </div>
+                        <form action="/create-room" method="POST">
+                            <div class="row">
+                                <div class="input-field col s6">
+                                    <input id="createRoomCode" name="createRoomCode" type="text" class="validate">
+                                    <label for="createRoomCode">Código da sala</label>
+                                </div>
+                                <div class="input-field col s6 btn-action__container">
+                                    <button type="submit" class="waves-effect waves-light blue btn">Criar</button>
+                                </div>
+                            </div>
+                        </form>
                   </div>
                   </div>
                   </div>
@@ -24,15 +26,17 @@
                   <div class="card-stacked">
                   <div class="card-content">
                       <p>Ou entre em uma sala já existente.</p>
-                      <div class="row">
-                        <div class="input-field col s6">
-                            <input id="last_name" type="text" class="validate">
-                            <label for="last_name">Código da sala</label>
+                      <form action="enter-room" method="POST">
+                        <div class="row">
+                            <div class="input-field col s6">
+                                <input id="roomCode" name="roomCode" type="text" class="validate">
+                                <label for="roomCode">Código da sala</label>
+                            </div>
+                            <div class="input-field col s6 btn-action__container">
+                                <button type="submit" class="waves-effect waves-light blue btn">Entrar</button>
+                            </div>
                         </div>
-                        <div class="input-field col s6 btn-action__container">
-                            <a class="waves-effect waves-light blue btn">Entrar</a>
-                        </div>
-                    </div>
+                        </form>
                   </div>
                 </div>
 
