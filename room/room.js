@@ -7,20 +7,27 @@ exports.getRoom = (req, res) => {
     let showActionButton = false
 
     if(!req.session.roomCode)
-        res.redirect('/enter-room')
+        return res.redirect('/')
 
     if(req.session.userId) {
         showActionButton = true
     }
 
-    res.render('room', {showActionButton})
+    res.render('room', {showActionButton, roomCode: req.session.roomCode})
+}
+
+exports.getCreateRoom = (req, res) => {
+    if(!req.session.userId) {
+        return res.redirect('/login')
+    }
+
+    res.render('create-room')
 }
 
 exports.createRoom = (req, res) => {
-    if(req.session.userId) {
-        res.redirect('/login')
+    if(!req.session.userId) {
+        return res.redirect('/login')
     }
-
-    req.session.roomCode = req.body.createRomCode
-    res.redirect(`/room/${req.body.roomCode}`)
+    req.session.roomCode = req.body.createRoomCode
+    res.redirect(`/room`)
 }
