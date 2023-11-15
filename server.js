@@ -1,3 +1,5 @@
+require('dotenv/config');
+
 const express = require('express')
 const session = require('express-session');
 const mongoose = require('mongoose');
@@ -8,9 +10,11 @@ const EventEmitter = require('events');
 const server = require('http').Server(app)
 const io = require('socket.io')(server)
 const User = require('./models/user');
-const { login, logout } = require("./auth/auth")
-const { enterRoom, getRoom } = require("./room/room")
 const oneDay = 1000 * 60 * 60 * 24;
+
+const routes = require('./src/routes');
+app.use('/', routes);
+
 
 const connectDB = require('./db/db');
 
@@ -32,34 +36,20 @@ app.use(express.static('public'))
 app.use(bodyParser.urlencoded({extended: true}))
 connectDB()
 
-app.use(session({
+const sessionConfig = {
     secret: 'fiwafhiwfwhvuwvu9hvvvwv',
 	saveUninitialized:true,
-    cookie: { maxAge: oneDay },
+    cookie: false,
     resave: false
-}));
+}
 
-//Routes
-app.get('/', (req, res) => res.render('home'))
-app.get('/login', (req, res) => res.render('login'))
-app.get('/logout', logout)
-app.post('/login', login)
+if (process.env === 'production') {
+	app.set('trust proxy', 1) // trust first proxy
+	sess.cookie.secure = true // serve secure cookies
+	sess.cookie = { maxAge: oneDay }
+}
 
-app.get('/enter-room', (req, res) => {
-	console.log(req.session.userId)
-	res.render('enter-room')
-})
-
-app.post('/enter-room', enterRoom)
-
-
-app.get('/create-room', (req, res) => {
-	console.log(req.body.password)
-	res.render('create-room')
-})
-
-
-app.get('/room/:room', getRoom)
+app.use(session(sessionConfig));
 
 var sendProcessFrame = true;
 io.on('connection', socket => {
