@@ -2,6 +2,13 @@ const socket = io('/')
 const videoGrid = document.getElementById('video-grid')
 
 
+document.querySelector('#copy-room-code').addEventListener('click', function(){
+	const roomCode = document.querySelector('#room-code').innerText
+	navigator.clipboard.writeText(roomCode)
+
+	M.toast({html: 'Código da sala copiado!'})
+})
+
 document.querySelector('#enable').addEventListener('click', function() {
   socket.emit('enable', ROOM_ID)
 });
