@@ -1,55 +1,29 @@
 require('dotenv/config');
 
 const express = require('express')
-const session = require('express-session');
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+const connectDB = require('./db/db');
+
+const dgram = require('dgram');
+const serverUDP = dgram.createSocket('udp4');
 const bodyParser = require('body-parser')
 const app = express()
 const EventEmitter = require('events');
 const server = require('http').Server(app)
 const io = require('socket.io')(server)
-const User = require('./models/user');
-const oneDay = 1000 * 60 * 60 * 24;
-
+const config = require('./src/config/config')
+const session = require('./src/config/session');
 const routes = require('./src/routes');
-app.use('/', routes);
-
-
-const connectDB = require('./db/db');
-
-//server UDP
-const dgram = require('dgram');
-
-// Cria um socket UDP para o servidor
-const serverUDP = dgram.createSocket('udp4');
-
 class MeuEmitter extends EventEmitter {}
-// // Criar uma instância do emitter personalizado
 const meuEvento = new MeuEmitter();
 
-
-const { v4: uuidV4 } = require('uuid')
-
 app.set('view engine', 'ejs')
+app.set('views', './src/views')
 app.use(express.static('public'))
 app.use(bodyParser.urlencoded({extended: true}))
+app.use(session);
+app.use('/', routes);
+
 connectDB()
-
-const sessionConfig = {
-    secret: 'fiwafhiwfwhvuwvu9hvvvwv',
-	saveUninitialized:true,
-    cookie: false,
-    resave: false
-}
-
-if (process.env === 'production') {
-	app.set('trust proxy', 1) // trust first proxy
-	sess.cookie.secure = true // serve secure cookies
-	sess.cookie = { maxAge: oneDay }
-}
-
-app.use(session(sessionConfig));
 
 var sendProcessFrame = true;
 io.on('connection', socket => {
@@ -82,25 +56,20 @@ io.on('connection', socket => {
 server.listen(3000)
 
 
-// Porta para escutar
 const porta = 8080;
 
-// Quando uma mensagem é recebida
 serverUDP.on('message', (msg, info) => {
 	console.log(`Mensagem recebida do endereço ${info.address}:${info.port}: ${msg}`);
 
-	// Emitir o evento customizado com uma mensagem
 	if(sendProcessFrame) {
 		console.log('EventoEmit = ', sendProcessFrame)
 		meuEvento.emit('eventoCustomizado', msg);
 	}
 });
 
-// Quando o servidor está escutando
 serverUDP.on('listening', () => {
 	const address = serverUDP.address();
 	console.log(`Servidor UDP escutando em ${address.address}:${address.port}`);
 });
 
-// Liga o servidor à porta especificada
 serverUDP.bind(porta);
