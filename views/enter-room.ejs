@@ -2,6 +2,7 @@
 <%- include('navbar'); -%>
 <div class="container">
     <!-- Page Content goes here -->
+    <form method="POST">
       <div class="card__container">
                   <div class="card horizontal">
                   <div class="card-stacked">
@@ -9,11 +10,11 @@
                       <p>Ou entre em uma sala já existente.</p>
                       <div class="row">
                         <div class="input-field col s6">
-                            <input id="last_name" type="text" class="validate">
+                            <input id="room-code" name="roomCode" type="text" class="validate">
                             <label for="last_name">Código da sala</label>
                         </div>
                         <div class="input-field col s6 btn-action__container">
-                            <a class="waves-effect blue waves-light btn ">Entrar</a>
+                            <button class="waves-effect blue waves-light btn " type="submit">Entrar</button>
                         </div>
                     </div>
                   </div>
@@ -21,5 +22,6 @@
 
           </div>
       </div>
+    </form>
   </div>
 <%- include('footer'); -%>
