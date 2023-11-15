@@ -1,9 +1,19 @@
 const express = require('express')
+const session = require('express-session');
+const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser')
 const app = express()
 const EventEmitter = require('events');
 const server = require('http').Server(app)
 const io = require('socket.io')(server)
+const User = require('./models/user');
+const { login, logout } = require("./auth/auth")
+const { enterRoom, getRoom } = require("./room/room")
+const oneDay = 1000 * 60 * 60 * 24;
+
+const connectDB = require('./db/db');
+
 //server UDP
 const dgram = require('dgram');
 
@@ -20,32 +30,28 @@ const { v4: uuidV4 } = require('uuid')
 app.set('view engine', 'ejs')
 app.use(express.static('public'))
 app.use(bodyParser.urlencoded({extended: true}))
+connectDB()
 
-// app.get('/', (req, res) => {
-// 	res.redirect(`room/${uuidV4()}`)
-// })
+app.use(session({
+    secret: 'fiwafhiwfwhvuwvu9hvvvwv',
+	saveUninitialized:true,
+    cookie: { maxAge: oneDay },
+    resave: false
+}));
 
-// app.get('room/:room', (req, res) => {
-// 	res.render('room', { roomId: req.params.room })
-// })
-
-app.get('/', (req, res) => {
-	res.render('home')
-})
-
-app.get('/login', (req, res) => {
-	res.render('login')
-})
-
-app.post('/login', (req, res) => {
-	console.log(req.body.password)
-	res.render('login')
-})
+//Routes
+app.get('/', (req, res) => res.render('home'))
+app.get('/login', (req, res) => res.render('login'))
+app.get('/logout', logout)
+app.post('/login', login)
 
 app.get('/enter-room', (req, res) => {
-	console.log(req.body.password)
+	console.log(req.session.userId)
 	res.render('enter-room')
 })
+
+app.post('/enter-room', enterRoom)
+
 
 app.get('/create-room', (req, res) => {
 	console.log(req.body.password)
@@ -53,9 +59,7 @@ app.get('/create-room', (req, res) => {
 })
 
 
-app.get('/room', (req, res) => {
-	res.render('room')
-})
+app.get('/room/:room', getRoom)
 
 var sendProcessFrame = true;
 io.on('connection', socket => {
