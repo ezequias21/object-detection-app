@@ -1,6 +1,6 @@
 exports.enterRoom = async (req, res) => {
     req.session.roomCode = req.body.roomCode;
-    res.redirect(`/room/${req.body.roomCode}`)
+    res.redirect(`/room`)
 }
 
 exports.getRoom = (req, res) => {
@@ -14,4 +14,13 @@ exports.getRoom = (req, res) => {
     }
 
     res.render('room', {showActionButton})
+}
+
+exports.createRoom = (req, res) => {
+    if(req.session.userId) {
+        res.redirect('/login')
+    }
+
+    req.session.roomCode = req.body.createRomCode
+    res.redirect(`/room/${req.body.roomCode}`)
 }
