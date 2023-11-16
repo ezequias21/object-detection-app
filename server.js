@@ -1,5 +1,3 @@
-require('dotenv/config');
-
 const express = require('express')
 const connectDB = require('./db/db');
 
@@ -10,11 +8,13 @@ const app = express()
 const EventEmitter = require('events');
 const server = require('http').Server(app)
 const io = require('socket.io')(server)
-const config = require('./src/config/config')
 const session = require('./src/config/session');
 const routes = require('./src/routes');
 class MeuEmitter extends EventEmitter {}
 const meuEvento = new MeuEmitter();
+const Room = {
+	code: '123456'
+}
 
 app.set('view engine', 'ejs')
 app.set('views', './src/views')
@@ -25,46 +25,33 @@ app.use('/', routes);
 
 connectDB()
 
-var sendProcessFrame = true;
+
+const listenerFrame = function(roomId){
+	console.log('Frame listener...')
+	const sockets = this
+
+	meuEvento.on('eventoCustomizado', (data) => {
+		console.log(`Evento customizado emitido: ${data}`, roomId);
+
+		if(roomId == Room.code) {
+			sockets.join(roomId)
+			sockets.to(roomId).broadcast.emit('new-frame', data);
+		}
+	});
+}
+
 io.on('connection', socket => {
-
-	socket.on('start-app', (roomId, userId) => {
-		socket.join(roomId)
-		console.log('start-app')
-
-		// Registrar um ouvinte para o evento customizado
-		meuEvento.on('eventoCustomizado', (data) => {
-			console.log(`Evento customizado emitido: ${data}`);
-			socket.to(roomId).broadcast.emit('new-process-data', data);
-		});
-	})
-
-	socket.on('enable', (roomId) => {
-		socket.join(roomId)
-		sendProcessFrame = true;
-		console.log('Evento habilitado');
-	  });
-
-	  socket.on('disable', (roomId) => {
-		socket.join(roomId)
-		sendProcessFrame = false;
-		console.log('Evento desabilitado');
-	  });
-
+	socket.on('start', listenerFrame);
 })
 
 server.listen(3000)
-
 
 const porta = 8080;
 
 serverUDP.on('message', (msg, info) => {
 	console.log(`Mensagem recebida do endereço ${info.address}:${info.port}: ${msg}`);
+	meuEvento.emit('eventoCustomizado', msg);
 
-	if(sendProcessFrame) {
-		console.log('EventoEmit = ', sendProcessFrame)
-		meuEvento.emit('eventoCustomizado', msg);
-	}
 });
 
 serverUDP.on('listening', () => {
@@ -73,3 +60,5 @@ serverUDP.on('listening', () => {
 });
 
 serverUDP.bind(porta);
+
+
