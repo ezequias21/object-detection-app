@@ -1,10 +1,14 @@
 const socket = io('/')
 const videoGrid = document.getElementById('video-grid')
+const img = document.querySelector('img');
 
 if(code) {
   socket.emit('start', code)
-  
-  socket.on('new-frame', userId => {
+
+  socket.on('new-frame', data => {
+    const imagemBase64 = btoa(String.fromCharCode(...new Uint8Array(data)));
+    img.src = 'data:image/jpg;base64,' + imagemBase64;
+
     console.log('New-frame')
   })
 }
