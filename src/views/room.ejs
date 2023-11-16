@@ -13,9 +13,13 @@
                   <img class="card-image__frame"src="/background.png">
                 </div>
                 <% if (showActionButton) { %>
-                    <div class="card-action card__btn-action">
-                        <a class="waves-effect waves-light blue btn">Habilitar</a>
-                        <a class="waves-effect waves-light blue btn">Desabilitar</a>
+                    <div class="switch card__btn-action">
+                        <label>
+                        Desabilitar
+                        <input type="checkbox">
+                        <span class="lever"></span>
+                        Habilitar
+                        </label>
                     </div>
                 <% } %>
             </div>
