@@ -37,7 +37,7 @@ const listenerFrame = function(roomId){
 
 		if(roomId == Room.code) {
 			sockets.join(roomId)
-			sockets.to(roomId).broadcast.emit('new-frame', data);
+			sockets.to(roomId).volatile.emit('new-frame', data);
 		}
 	});
 }
