@@ -38,7 +38,6 @@ const listenerFrame = function(roomId){
 		if(roomId == Room.code) {
 			sockets.join(roomId)
 			sockets.to(roomId).broadcast.emit('new-frame', data);
-			sockets.to(roomId).broadcast.emit('signal', 'signal');
 		}
 	});
 }
@@ -49,7 +48,7 @@ io.on('connection', socket => {
 
 server.listen(3000)
 
-const porta = 8080;
+const porta = 2814;
 
 serverUDP.on('message', (msg, info) => {
 	console.log(`Mensagem recebida do endereço ${info.address}:${info.port}: ${msg}`);
