@@ -88,7 +88,7 @@
 .border-info-card {
     border: 1px solid #e3f2fd;
 }
-@media (min-width: 576px ) and  (max-width: 768px ){
+@media (min-width: 300px ) and  (max-width: 768px ){
     .card.card-frame,
     .card-image__container ,
     .card-image__frame{
