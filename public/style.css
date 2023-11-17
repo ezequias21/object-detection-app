@@ -64,7 +64,8 @@
     width: 54px;
     height: 21px;
 }
-.switch label input[type="checkbox"]:checked + .lever::before, .switch label input[type="checkbox"]:checked + .lever::after {
+.switch label input[type="checkbox"]:checked + .lever::before,
+.switch label input[type="checkbox"]:checked + .lever::after {
     left: 28px;
 }
 .signal-status {
@@ -77,4 +78,27 @@
     width: 20px;
     height: 20px;
     border-radius: 50%;
+}
+.card-action{
+    display: flex;
+    justify-content:start;
+    gap: 10px;
+    align-items: center;
+}
+.border-info-card {
+    border: 1px solid #e3f2fd;
+}
+@media (min-width: 576px ) and  (max-width: 768px ){
+    .card.card-frame,
+    .card-image__container ,
+    .card-image__frame{
+        width: 100%;
+    }
+
+    .card__container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
 }
