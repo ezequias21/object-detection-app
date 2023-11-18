@@ -85,3 +85,9 @@ socket.on('new-frame', data => {
 
     console.log('New-frame')
 })
+
+const urlParams = new URLSearchParams(window.location.search);
+const roomCodeStatus = urlParams.get('roomCodeStatus');
+if(roomCodeStatus == "false") {
+    M.toast({html: 'A sala que você está tentando acessar não existe!'})
+}
