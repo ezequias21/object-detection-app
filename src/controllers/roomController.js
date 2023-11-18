@@ -13,7 +13,7 @@ exports.getRoom = (req, res) => {
         showActionButton = true
     }
 
-    res.render('room', {showActionButton, roomCode: req.session.roomCode})
+    res.render('room', {showActionButton, roomCode: req.session.roomCode, userId: req.session.userId })
 }
 
 exports.getCreateRoom = (req, res) => {
@@ -21,7 +21,7 @@ exports.getCreateRoom = (req, res) => {
         return res.redirect('/login')
     }
 
-    res.render('create-room')
+    res.render('create-room', {userId: req.session.userId })
 }
 
 exports.createRoom = (req, res) => {
