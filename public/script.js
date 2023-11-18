@@ -2,7 +2,16 @@ const socket = io('/')
 const videoGrid = document.getElementById('video-grid')
 const img = document.querySelector('.card-image__frame');
 var timeout = 0;
-var lastTimeFrameUpdated = new Date();
+var lastTimeSignalReceived = new Date();
+var isReceivingFrame = false;
+
+var setBtnActionStatus = (status) => {
+  document.querySelector('#btn-action').checked = status
+}
+
+var setDefaultBackground = () => {
+    img.src = '/background.png'
+}
 
 const inactivity = (timePassed, now) =>{
     var diff = Math.abs(now.getTime() - timePassed.getTime());
@@ -11,44 +20,68 @@ const inactivity = (timePassed, now) =>{
     return diffSeconds > 1
 }
 
-const signalStatus = () => {
-    if(inactivity(lastTimeFrameUpdated, new Date())) {
-        document.querySelector('.signal-status').innerHTML =
-        `<div>Sinal da transmissão inativo</div><div class="round red"></div></a>`
-        img.src = '/background.png'
-    }else {
-        document.querySelector('.signal-status').innerHTML =
-        `<div>Sinal da transmissão ativo</div><div class="round light-green"></div></a>`
+const setStatusDisconnected = () => {
+  document.querySelector('.signal-status').innerHTML = 
+    `<div>Sinal da transmissão inativo</div><div class="round red"></div></a>`
+}
+
+const setStatusConnected = () => {
+  document.querySelector('.signal-status').innerHTML =
+    `<div>Sinal da transmissão ativo</div><div class="round light-green"></div></a>`
+}
+
+const checkStillHaveSignal = () => {
+    if(inactivity(lastTimeSignalReceived, new Date())) {
+        setStatusDisconnected()
+        setDefaultBackground()
+        setBtnActionStatus(false)
+        isReceivingFrame = false
+    } else {
+        setStatusConnected()
+        if(isReceivingFrame)
+            setBtnActionStatus(true)
     }
 }
 
 if(code) {
     socket.emit('start', code)
 
-    socket.on('new-frame', data => {
-        const imagemBase64 = btoa(String.fromCharCode(...new Uint8Array(data)));
-        img.src = 'data:image/jpg;base64,' + imagemBase64;
+    document.querySelector('#copy-room-code').addEventListener('click', function(){
+        const roomCode = document.querySelector('#room-code').innerText
+        navigator.clipboard.writeText(roomCode)
 
-        lastTimeFrameUpdated = new Date();
-
-        console.log('New-frame')
-  })
+        M.toast({html: 'Código da sala!'})
+    })
 }
 
+if(userId) {
+    document.querySelector('#btn-action').addEventListener('change', function(event) {
+        if(event.target.checked) {
+            socket.emit('send-start')
+            isReceivingFrame = true
+        } else {
+            socket.emit('send-stop')
+            setDefaultBackground()
+            isReceivingFrame = false
+        }
+    })
 
-setInterval(signalStatus, 2000);
+    socket.on('send-status', status => {
+        setBtnActionStatus(status)
+    })
 
-document.querySelector('#copy-room-code').addEventListener('click', function(){
-	const roomCode = document.querySelector('#room-code').innerText
-	navigator.clipboard.writeText(roomCode)
+    socket.on('receiving-signal', () => {
+        console.log('signal1')
+        lastTimeSignalReceived = new Date();
+    })
 
-	M.toast({html: 'Código da sala!'})
+    setInterval(checkStillHaveSignal, 2000);
+}
+
+socket.on('new-frame', data => {
+    const imagemBase64 = btoa(String.fromCharCode(...new Uint8Array(data)));
+    img.src = 'data:image/jpg;base64,' + imagemBase64;
+    isReceivingFrame = true
+
+    console.log('New-frame')
 })
-
-document.querySelector('#enable').addEventListener('click', function() {
-  socket.emit('enable', ROOM_ID)
-});
-
-document.querySelector('#disable').addEventListener('click', function() {
-  socket.emit('disable', ROOM_ID)
-});
