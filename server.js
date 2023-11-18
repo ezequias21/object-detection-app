@@ -82,9 +82,7 @@ serverUDP.on('message', (msg, info) => {
 	console.log(`Mensagem recebida do endereço ${info.address}`);
 
 	adminUsers.forEach((adminUser) => {
-		console.log('Emite o admin')
 		io.to(adminUser.roomCode).volatile.emit('new-frame', msg)
-			console.log('Emitiu o admin')
 	})
 
 	io.emit('receiving-signal', 2)
