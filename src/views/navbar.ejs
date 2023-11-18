@@ -5,12 +5,14 @@
       </a>
       <ul id="nav-mobile" class="right hide-on-med-and-down">
         <% if(locals.roomCode) {%>
-        <li><a id="copy-room-code" class="waves-effect waves-light btn"><i class="material-icons right">content_copy</i><span id="room-code"><%= locals.roomCode %></span></a></li>
+          <li><a id="copy-room-code" class="waves-effect waves-light btn"><i class="material-icons right">content_copy</i><span id="room-code"><%= locals.roomCode %></span></a></li>
+        <% }%>
+        <% if(locals.userId) {%>
         <li class="signal-status">
           <div>Sinal da transmissão inativo</div><div class="round red"></div></a>
         </li>
-        <% }%>
         <li><a href="/logout">Logout</a></li>
+        <% }%>
       </ul>
     </div>
   </nav>
