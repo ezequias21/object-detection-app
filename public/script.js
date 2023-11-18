@@ -32,14 +32,18 @@ const setStatusConnected = () => {
 
 const checkStillHaveSignal = () => {
     if(inactivity(lastTimeSignalReceived, new Date())) {
-        setStatusDisconnected()
-        setDefaultBackground()
-        setBtnActionStatus(false)
+        if(userId) {
+            setStatusDisconnected()
+            setBtnActionStatus(false)
+        }
         isReceivingFrame = false
+        setDefaultBackground()
     } else {
-        setStatusConnected()
-        if(isReceivingFrame)
-            setBtnActionStatus(true)
+        if(userId) {
+            setStatusConnected()
+            if(isReceivingFrame)
+                setBtnActionStatus(true)
+        }
     }
 }
 
@@ -58,9 +62,8 @@ if(userId) {
     document.querySelector('#btn-action').addEventListener('change', function(event) {
         if(event.target.checked) {
             socket.emit('send-start')
-            isReceivingFrame = true
         } else {
-            socket.emit('send-stop')
+            socket.emit('send-stop', code)
             setDefaultBackground()
             isReceivingFrame = false
         }
@@ -70,20 +73,23 @@ if(userId) {
         setBtnActionStatus(status)
     })
 
-    socket.on('receiving-signal', () => {
-        console.log('signal1')
-        lastTimeSignalReceived = new Date();
-    })
-
-    setInterval(checkStillHaveSignal, 2000);
 }
+
+setInterval(checkStillHaveSignal, 2000);
+
+socket.on('stopped', () => {
+    isReceivingFrame = false
+    setDefaultBackground()
+})
+
+socket.on('receiving-signal', () => {
+    lastTimeSignalReceived = new Date();
+})
 
 socket.on('new-frame', data => {
     const imagemBase64 = btoa(String.fromCharCode(...new Uint8Array(data)));
     img.src = 'data:image/jpg;base64,' + imagemBase64;
     isReceivingFrame = true
-
-    console.log('New-frame')
 })
 
 const urlParams = new URLSearchParams(window.location.search);

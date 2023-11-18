@@ -67,7 +67,9 @@ io.on('connection', socket => {
 		}
 	});
 
-	socket.on('send-stop', () => {
+	socket.on('send-stop', (roomCode) => {
+		socket.join(roomCode)
+		io.to(roomCode).emit('stopped', 12)
 		if(socket.handshake.session.userId) {
 			adminUsers = removeAdminUser(adminUsers, socket.handshake.session.userId)
 		}
