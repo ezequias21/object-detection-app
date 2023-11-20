@@ -92,7 +92,7 @@
 }
 .brand-log-content {
     display: flex;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
 }
 
@@ -128,6 +128,9 @@
     }
     .brand-logo img {
         width: 140px;
+    }
+    .brand-log-content {
+        justify-content: center;
     }
 }
 
