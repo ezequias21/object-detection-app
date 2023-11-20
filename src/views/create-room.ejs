@@ -2,18 +2,21 @@
 <%- include('navbar'); -%>
 <div class="container">
     <div class="card__container">
-      
+
+
+        <% if(locals.userId) {%>
         <div class="card horizontal">
             <div class="card-stacked">
                 <div class="card-content">
-                      <p>Crie uma nova sala.</p>
+                      <h5>Crie uma nova sala.</h5>
                         <form action="/create-room" method="POST">
                             <div class="row">
-                                <div class="input-field col s6">
+                                <div class="input-field col s12">
                                     <input id="createRoomCode" name="createRoomCode" type="text" class="validate">
                                     <label for="createRoomCode">Código da sala</label>
                                 </div>
-                                <div class="input-field col s6 btn-action__container">
+                                <div class="input-field col btn-action__container">
+                                    <button type="button" id="generateRoomCode" class="waves-effect waves-light blue btn">Gerar</button>
                                     <button type="submit" class="waves-effect waves-light blue btn">Criar</button>
                                 </div>
                             </div>
@@ -25,20 +28,21 @@
                       </div>
                   </div>
                   </div>
+                  <% } %>
 
 
 
                   <div class="card horizontal">
                   <div class="card-stacked">
                   <div class="card-content">
-                      <p>Ou entre em uma sala já existente.</p>
+                    <h5>Entre uma nova sala.</h5>
                       <form action="enter-room" method="POST">
                         <div class="row">
-                            <div class="input-field col s6">
+                            <div class="input-field col s12">
                                 <input id="roomCode" name="roomCode" type="text" class="validate">
                                 <label for="roomCode">Código da sala</label>
                             </div>
-                            <div class="input-field col s6 btn-action__container">
+                            <div class="input-field col btn-action__container">
                                 <button type="submit" class="waves-effect waves-light blue btn">Entrar</button>
                             </div>
                         </div>
@@ -50,8 +54,7 @@
                   </div>
                 </div>
             </div>
-      
       </div>
   </div>
-
+  <script src="/enter-room.js" defer></script>
 <%- include('footer'); -%>
