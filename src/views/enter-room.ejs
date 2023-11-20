@@ -7,13 +7,13 @@
                   <div class="card horizontal">
                   <div class="card-stacked">
                   <div class="card-content">
-                      <p>Ou entre em uma sala já existente.</p>
+                      <h5>Entre uma nova sala.</h5>
                       <div class="row">
-                        <div class="input-field col s6">
+                        <div class="input-field col s12">
                             <input id="room-code" name="roomCode" type="text" class="validate">
                             <label for="room-code">Código da sala</label>
                         </div>
-                        <div class="input-field col s6 btn-action__container">
+                        <div class="input-field col btn-action__container">
                             <button class="waves-effect blue waves-light btn " type="submit">Entrar</button>
                         </div>
                     </div>
@@ -27,5 +27,7 @@
           </div>
       </div>
     </form>
+
   </div>
-<%- include('footer'); -%>
+  <script src="/enter-room.js" defer></script>
+  <%- include('footer'); -%>
