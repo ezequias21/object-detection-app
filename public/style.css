@@ -23,6 +23,7 @@
 .btn-action__container {
     display: flex;
     justify-content: center;
+    gap: 10px;
 }
 .frame__container{
 
@@ -90,6 +91,15 @@
     border: 1px solid #e3f2fd;
 }
 
+.brand-log-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.brand-log-content div {
+    margin-left: 20px;
+}
 
 @media (min-width: 300px ) and  (max-width: 768px ){
     nav .signal-status {
