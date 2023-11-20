@@ -91,9 +91,3 @@ socket.on('new-frame', data => {
     img.src = 'data:image/jpg;base64,' + imagemBase64;
     isReceivingFrame = true
 })
-
-const urlParams = new URLSearchParams(window.location.search);
-const roomCodeStatus = urlParams.get('roomCodeStatus');
-if(roomCodeStatus == "false") {
-    M.toast({html: 'A sala que você está tentando acessar não existe!'})
-}
